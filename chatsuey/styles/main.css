@@ -163,9 +163,11 @@ p {
 }
 
 .keyboard-key,
+.disabled-addon-note,
 code {
   border-radius: .25rem;
   border: 1px solid;
+  display: inline-block;
 }
 
 .keyboard-key {
@@ -185,6 +187,13 @@ code {
   border-color: #ddd;
   padding: .2rem .3rem;
   background-color: #fafafa;
+}
+
+.disabled-addon-note {
+  font-family: "Inconsolata", monospace;
+  border-color: #ebb;
+  padding: .2rem .3rem;
+  background-color: #fffcfc;
 }
 
 li {
