@@ -25,23 +25,27 @@
 
 body {
   text-align: center;
-  padding-top: 60px;
+  padding: 4rem 2rem;
   font-family: "Hind Vadodara", sans-serif;
-  font-size: 24px;
+  font-size: 1.5rem;
   color: #444;
 }
 
 h1, h2, h3 {
   margin: 2rem 0 1rem;
-  margin: 2rem 0 1rem;
 }
 
-.scott-photo {
-  margin-bottom: 1rem;
+h1 {
+  font-size: 4rem;
+  line-height: 4.5rem;
 }
 
-.logo {
-  margin-bottom: 2rem;
+h2 {
+  font-size: 3rem;
+}
+
+h3 {
+  font-size: 1.75rem;
 }
 
 a {
@@ -53,10 +57,14 @@ a:hover {
   text-decoration: underline;
 }
 
+.project-list {
+  list-style-type: none;
+}
+
 .project {
   margin: 1rem 0;
 }
 
-.project a {
+.project__title {
   font-weight: bold;
 }
