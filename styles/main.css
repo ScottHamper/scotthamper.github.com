@@ -1,3 +1,23 @@
+@font-face {
+  font-family: "Hind Vadodara";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Hind Vadodara"),
+       local("HindVadodara-Regular"),
+       url("../fonts/HindVadodara-Regular.woff2") format("woff2"),
+       url("../fonts/HindVadodara-Regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Hind Vadodara";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Hind Vadodara Bold"),
+       local("HindVadodara-Bold"),
+       url("../fonts/HindVadodara-Bold.woff2") format("woff2"),
+       url("../fonts/HindVadodara-Bold.woff") format("woff");
+}
+
 * {
   padding: 0;
   margin: 0;
@@ -6,9 +26,14 @@
 body {
   text-align: center;
   padding-top: 60px;
-  font-family: sans-serif;
+  font-family: "Hind Vadodara", sans-serif;
   font-size: 24px;
   color: #444;
+}
+
+h1, h2, h3 {
+  margin: 2rem 0 1rem;
+  margin: 2rem 0 1rem;
 }
 
 .scott-photo {
@@ -21,10 +46,15 @@ body {
 
 a {
   color: #07C;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 .project {
-  margin: 24px 0;
+  margin: 1rem 0;
 }
 
 .project a {
