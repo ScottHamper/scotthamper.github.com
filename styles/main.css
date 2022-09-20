@@ -35,6 +35,10 @@ h1, h2, h3 {
   margin: 2rem 0 1rem;
 }
 
+h1:first-child {
+  margin-top: 0;
+}
+
 h1 {
   font-size: 4rem;
   line-height: 4.5rem;
@@ -55,6 +59,28 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+.account-links {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.account-link img {
+  display: block;
+}
+
+.account-link--gitlab {
+  background: #000;
+  border-radius: 50%;
+}
+
+.account-link--code-golf {
+  background: #000;
+  border-radius: 50%;
 }
 
 .project-list {
