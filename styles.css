@@ -40,6 +40,19 @@ body {
   margin: 1rem 0;
 }
 
+@media (max-width: 45rem) {
+    .project {
+        margin: .75rem 0;
+    }
+}
+
+@media (max-width: 30rem) {
+    .project {
+        margin: .5rem 0;
+    }
+}
+
+
 .project__title {
   font-weight: bold;
 }
