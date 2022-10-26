@@ -3,9 +3,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Scott Hamper</title>
-    <link rel="stylesheet" href="styles/main.css" />
     <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <h1>Scott Hamper</h1>
@@ -14,7 +16,10 @@
         <img src="images/gitlab-icon.svg" width="32" height="32" title="GitLab" />
       </a>
       <a href="https://github.com/ScottHamper" target="_blank" rel="nofollow noopener" class="account-link">
-        <img src="images/github-icon.png" width="32" height="32" title="GitHub" />
+        <picture>
+          <source srcset="images/github-icon-light.png" media="(prefers-color-scheme: dark)" />
+          <img src="images/github-icon.png" width="32" height="32" title="GitHub" />
+        </picture>
       </a>
       <a href="https://code.golf/golfers/ScottHamper" target="_blank" rel="nofollow noopener" class="account-link account-link--code-golf">
         <img src="images/code-golf-icon.svg" width="32" height="32" title="Code Golf" />
@@ -22,7 +27,7 @@
     </div>
     <p>Creator of <a href="https://scottfree.software" target="_blank">Scott-Free Software</a></p>
 
-    <h2>Projects</h2>
+    <h2>Software</h2>
     <ul class="project-list">
       <li class="project">
         <a href="https://scottfree.software/rulevelur/" class="project__title" target="_blank">Rulevelur</a> - A simple ruler and bubble level app for Android.

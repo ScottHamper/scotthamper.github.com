@@ -1,0 +1,45 @@
+body {
+  text-align: center;
+  padding: 2rem 2rem;
+}
+
+.account-links {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 0 0 1rem 0;
+}
+
+.account-link img {
+  display: block;
+}
+
+.account-link--gitlab {
+  background: #000;
+  border-radius: 50%;
+}
+
+.account-link--code-golf {
+  background: #000;
+  border-radius: 50%;
+}
+
+@media (prefers-color-scheme: dark) {
+    .account-link--gitlab,
+    .account-link--code-golf {
+        background: #fff;
+    }
+}
+
+.project-list {
+  list-style-type: none;
+}
+
+.project {
+  margin: 1rem 0;
+}
+
+.project__title {
+  font-weight: bold;
+}

@@ -1,3 +1,17 @@
+:root {
+  --body-color: #444;
+  --body-background: #fff;
+  --link-color: #07C;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --body-color: #fff;
+    --body-background: #222;
+    --link-color: #3AF;
+  }
+}
+
 @font-face {
   font-family: "Hind Vadodara";
   font-style: normal;
@@ -24,73 +38,36 @@
 }
 
 body {
-  text-align: center;
-  padding: 4rem 2rem;
   font-family: "Hind Vadodara", sans-serif;
   font-size: 1.5rem;
   color: #444;
-}
-
-h1, h2, h3 {
-  margin: 2rem 0 1rem;
-}
-
-h1:first-child {
-  margin-top: 0;
+  color: var(--body-color);
+  background: #fff;
+  background: var(--body-background);
 }
 
 h1 {
-  font-size: 4rem;
-  line-height: 4.5rem;
+  font-size: 6rem;
+}
+
+h2, h3 {
+  margin: 3rem 0 1rem;
 }
 
 h2 {
-  font-size: 3rem;
+  font-size: 3.5rem;
 }
 
 h3 {
-  font-size: 1.75rem;
+  font-size: 2rem;
 }
 
 a {
   color: #07C;
+  color: var(--link-color);
   text-decoration: none;
 }
 
 a:hover {
   text-decoration: underline;
-}
-
-.account-links {
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin: 1rem 0;
-}
-
-.account-link img {
-  display: block;
-}
-
-.account-link--gitlab {
-  background: #000;
-  border-radius: 50%;
-}
-
-.account-link--code-golf {
-  background: #000;
-  border-radius: 50%;
-}
-
-.project-list {
-  list-style-type: none;
-}
-
-.project {
-  margin: 1rem 0;
-}
-
-.project__title {
-  font-weight: bold;
 }
