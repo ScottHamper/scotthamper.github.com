@@ -1,0 +1,78 @@
+body {
+    max-width: 80ch;
+    margin: 0 auto;
+}
+
+h1, h2, h3, .page-subheader, .pinout__diagram {
+    text-align: center;
+}
+
+img {
+    display: block;
+    margin: 1rem auto;
+}
+
+.image-link {
+    display: block;
+    margin: 1rem auto;
+    max-width: max-content;
+}
+
+.image-link--gitlab img {
+    border: .1rem solid #959595;
+    border-radius: .38rem;
+    box-sizing: border-box;
+    height: 3rem;
+    padding: 0 .5rem;
+}
+
+.page-subheader {
+    margin: 0 0 1.75rem;
+}
+
+.header-emoji {
+    padding: 0 1rem;
+}
+
+.pinout {
+    display: flex;
+    gap: 4rem;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+.pinout__list {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(5, auto);
+    justify-content: center;
+    column-gap: 6rem;
+}
+
+.wire-layout {
+    max-width: max-content;
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+    text-align: center;
+}
+
+.wire-layout th,
+.wire-layout td {
+    padding: 0 1rem;
+}
+
+.wire-layout th {
+    padding-bottom: .25rem;
+    border-bottom: 1px solid;
+}
+
+.wire-layout td:last-child {
+    text-align: left;
+}
+
+.wire-layout tr:nth-child(even) {
+    background-color: #191919;
+    background-color: rgba(var(--body-color-rgb), 0.1);
+}

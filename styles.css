@@ -1,6 +1,5 @@
 body {
   text-align: center;
-  padding: 2rem 2rem;
 }
 
 .account-links {
@@ -51,7 +50,6 @@ body {
         margin: .5rem 0;
     }
 }
-
 
 .project__title {
   font-weight: bold;

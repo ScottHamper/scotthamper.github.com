@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RedOcteensy · Scott Hamper</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>RedOcteensy</h1>
+    <div class="page-subheader">Converting an old RedOctane metal DDR pad to USB</div>
+    <img src="images/ddr-pad.png" alt="Drawing of a RedOctane PXMTP DDR pad" width="422" height="468" />
+
+    <h2>Introduction</h2>
+    <p>
+      For nearly twenty years, I've had a metal RedOctane DDR pad (model: PXMTP) sitting alone and forgotten under the basement stairs in my parents' house. While contemplating ways to exercise at home without buying a bunch of equipment, I rediscovered the pad and thought DDR would be a great way to get my heart pumping. Unfortunately, the pad only has cables for the PlayStation 2 and original Xbox, making it useless for modern technology. Fortunately, those cables are not hard-wired directly into the pad - they're part of a control box that the pad connects to via a <a href="https://en.wikipedia.org/wiki/D-subminiature" target="_blank" rel="nofollow noopener">DE-15 connector</a>. By swapping out or modifying the control box, it would be possible to have the pad connect to a computer via USB.
+    </p>
+
+    <h2>Goal</h2>
+    <p>
+      Get the DDR pad connected to a PC via USB so that it can be used with <a href="https://www.stepmania.com/" target="_blank" rel="nofollow noopener">StepMania</a> and <a href="https://www.retroarch.com/" target="_blank" rel="nofollow noopener">RetroArch</a>.
+    </p>
+
+    <h2>Possible Solutions</h2>
+
+    <h3>RedOctane Afterburner USB Control Box</h3>
+    <p>
+      As luck would have it, <a href="https://performancegamingpads.com/products/redoctane-usb-computer-control-box" target="_blank" rel="nofollow noopener">a USB control box</a> already exists for the RedOctane Afterburner DDR pad. Goal achieved! Thanks for reading.
+    </p>
+    <p>
+      ... Except the control box costs a whopping $65 dollars, and it's unclear whether or not it would work with my pad. When Googling "RedOctane Afterburner", most results point to a different model (PX<strong>U</strong>MTP) that uses a DE-9 connector. Given the similarity in model names, it's possible that mine was a different revision of the Afterburner, but the store page for the control box doesn't clearly show which DE connector it uses. I did find a single eBay listing for the PXMTP that included a USB control box that looked the same, so 🤷. Regardless, $65 is too steep! <em>Disqualified</em>.
+    </p>
+
+    <h3>Xbox to USB adapter cable</h3>
+    <p>
+      The original Xbox controller connector is secretly a USB cable in a proprietary housing. As a result, it's possible to purchase an adapter or modify the cable to use a standard USB-A connector. Ready-made adapters seem to be pretty cheap to buy - around $12 <a href="https://www.amazon.com/dp/B000RT2868" rel="nofollow noopener">via Amazon</a> - making them an affordable option. However, the primary concern for this solution is whether or not there will be driver support for a converted controller.
+    </p>
+    <p>
+      For Windows, it looks like <a href="https://github.com/emoose/Xb2XInput" target="_blank" rel="nofollow noopener">Xb2XInput</a> could work, though the developer specifically mentions that they haven't tried using any DDR pads and don't officially support them. Personally, I want to use Linux, and it sounds like <a href="https://www.kernel.org/doc/html/v6.0/input/devices/xpad.html" target="_blank" rel="nofollow noopener">the xpad kernel driver</a> <em>would</em> support a converted original Xbox controller.
+    </p>
+    <p>
+      Ultimately though, I'd prefer to have a solution that makes the pad look like an XInput device to the PC, without requiring additional software. In my experience, XInput devices generally "just work" on both Windows and Linux, and enjoy ubiquitous support in games.
+    </p>
+
+    <h3><span class="header-emoji">🏆</span> DIY Control Box <span class="header-emoji">🏆</span></h3>
+    <p>
+      Using a microcontroller, it could be relatively straightforward to create a custom control box. With a male DE-15 connector that gives easy access to its individual pins, the microcontroller could monitor the signals on those pins and send appropriate XInput data over USB. A search for "Arduino XInput" quickly reveals the <a href="https://github.com/dmadison/ArduinoXInput" target="_blank" rel="nofollow noopener">Arduino XInput Library</a>, which should make it easy to send such data, and the library supports an assortment of Arduino, SparkFun, and Teensy microcontrollers.
+    </p>
+    <p>
+      Creating a custom control box has additional benefits beyond allowing the pad to act as an XInput device. By having control over the software running on a microcontroller, I can reprogram the pad to behave in whatever way I need or want. This would be most valuable if I later decide to upgrade the pad to use <a href="https://en.wikipedia.org/wiki/Force-sensing_resistor" target="_blank" rel="nofollow noopener">force-sensing resistors</a>, replacing the crude contact sensors it came with.
+    </p>
+
+    <h2 id="parts">Parts</h2>
+    <ul>
+      <li><a href="https://www.pjrc.com/teensy/teensyLC.html" target="_blank" rel="nofollow noopener">Teensy-LC</a> ($12.85)</li>
+      <li><a href="https://www.pjrc.com/store/header_14x1.html" target="_blank" rel="nofollow noopener">14x1 header pins</a> (x2; $0.56)</li>
+      <li><a href="https://www.adafruit.com/product/3125" target="_blank" rel="nofollow noopener">DE-15 male plug to terminal block breakout</a> ($4.50)</li>
+      <li><a href="https://www.adafruit.com/product/1954" target="_blank" rel="nofollow noopener">Female/male jumper wires</a> ($1.95)</li>
+      <li><a href="https://www.adafruit.com/product/937" target="_blank" rel="nofollow noopener">Panel mount USB-B female to micro-B male</a> ($3.95)</li>
+    </ul>
+    <div>Total Cost: $23.81 + tax + shipping</div>
+    <p>
+      Among the microcontrollers supported by the Arduino XInput Library, the Teensy-LC is the cheapest, and is also small enough to fit in the original control box enclosure. Looking at the hardware specs, the Teensy-LC also seems to outperform the similarly sized <a href="https://store.arduino.cc/products/arduino-micro" target="_blank" rel="nofollow noopener">Arduino Micro</a> and <a href="https://www.sparkfun.com/products/12587" target="_blank" rel="nofollow noopener">SparkFun Pro Micro</a> while being 1/2 to 2/3 the cost.
+    </p>
+
+    <h2 id="pinout">Pinout</h2>
+    <div class="pinout">
+      <div class="pinout__diagram">
+        <div>DE-15 (Male)</div>
+        <picture>
+          <source srcset="images/de-15-pinout-light.png" media="(prefers-color-scheme: dark)" />
+          <img src="images/de-15-pinout.png" alt="A male DE-15 connector with pins labeled" width="294" height="133" />
+        </picture>
+      </div>
+      <ol class="pinout__list">
+        <li>-</li>
+        <li>🢄</li>
+        <li>GND (🢄, 🢅)</li>
+        <li>🢅</li>
+        <li>GND (🡄, 🡇)</li>
+        <li>-</li>
+        <li>-</li>
+        <li>-</li>
+        <li>-</li>
+        <li>-</li>
+        <li>🡆</li>
+        <li>🡄</li>
+        <li>🡇</li>
+        <li>🡅</li>
+        <li>GND (🡆, 🡅)</li>
+      </ol>
+    </div>
+
+    <h2 id="build-notes">Build Notes</h2>
+    <a href="images/control-box.jpg" target="_blank" class="image-link">
+      <img src="images/control-box-preview.png" alt="The modified control box interior" />
+    </a>
+    <p>
+      The DE-15 terminal block breakout can be easily removed from its plastic case - it simply slides out. It's a good thing, too, because its case is too large to fit in the DDR pad's control box enclosure.
+    </p>
+    <p>
+      I used pins 14-19 on the Teensy since these are the lowest-number pins that support analog signals. For now, only digital pins are needed, but if/when I upgrade to FSRs, I don't want to have to rewire anything or change constants in the code. Here's the wire layout:
+    </p>
+    <table class="wire-layout">
+      <tr>
+        <th>Teensy Pin</th>
+        <th>DE-15 Pin(s)</th>
+        <th>PXMTP Button</th>
+        <th>Wire Color</th>
+      </tr>
+      <tr>
+        <td>GND</td>
+        <td>3, 5, 15, GND</td>
+        <td>-</td>
+        <td>Black</td>
+      </tr>
+      <tr>
+        <td>14 (A0)</td>
+        <td>11</td>
+        <td>🡆</td>
+        <td>Yellow</td>
+      </tr>
+      <tr>
+        <td>15 (A1)</td>
+        <td>12</td>
+        <td>🡄</td>
+        <td>Orange</td>
+      </tr>
+      <tr>
+        <td>16 (A2)</td>
+        <td>2</td>
+        <td>🢄</td>
+        <td>Purple</td>
+      </tr>
+      <tr>
+        <td>17 (A3)</td>
+        <td>14</td>
+        <td>🡅</td>
+        <td>Blue</td>
+      </tr>
+      <tr>
+        <td>18 (A4)</td>
+        <td>13</td>
+        <td>🡇</td>
+        <td>Green</td>
+      </tr>
+      <tr>
+        <td>19 (A5)</td>
+        <td>4</td>
+        <td>🢅</td>
+        <td>White</td>
+      </tr>
+    </table>
+    <p>
+      I was planning to also hook up the control box's START/SELECT buttons, but accidentally melted the inside of the START button when de-soldering the wires connected to it. With START broken, I convinced myself that I didn't really need SELECT, either - the up-right arrow will be used to confirm menu items and the up-left arrow will be used to go back. For all other inputs, the PC will use a wireless keyboard/mouse. With that out of the way, I re-purposed some of the black wire from the START/SELECT buttons to daisy-chain GND connections on the DE-15 terminal block breakout.
+    </p>
+    <p>
+      Unfortunately, the USB-B panel mount cable is too long to be able to position the mount over top of the original hole that the control box had for the PS2/Xbox cables. So instead, I drilled new holes off to the side and filed the center hole down to size. I may eventually investigate ways to plug the open holes on the case, but overall, I'm really happy with how everything turned out!
+    </p>
+
+    <h2 id="software">Software</h2>
+    <a href="https://gitlab.com/ScottHamper/red-octeensy" target="_blank" rel="nofollow noopener" title="Get the code via GitLab" class="image-link image-link--gitlab">
+      <img src="images/gitlab-logo.svg" alt="The GitLab logo" height="48" />
+    </a>
+    <p>
+      The Arduino XInput Library really trivialized the programming required for this project, but I also incorporated <a href="https://github.com/thomasfredericks/Bounce2" target="_blank" rel="nofollow noopener">the Bounce2 library</a> to prevent buttons from double/triple/quadruple triggering. Buttons triggering multiple times wasn't a problem for normal gameplay, but it made navigating menus very annoying.
+    </p>
+
+    <h2>Results</h2>
+    <p>
+      It works! Now I just need to git gud.
+    </p>
+    <p>
+      While I had hoped that the result of this project would be a plug and play experience on both Windows and Linux, I did end up having to do some extra configuration on Linux. The xpad kernel driver maps d-pad inputs to axes instead of discrete buttons, which can't be bound in StepMania and can't be used for jump steps that require pressing multiple directions at the same time. I ended up using <a href="https://gitlab.com/xboxdrv/xboxdrv/" target="_blank" rel="nofollow noopener">xboxdrv</a> instead of xpad, and have detailed the steps I took to install/configure xboxdrv in <a href="https://gitlab.com/ScottHamper/red-octeensy/-/blob/main/README.md#linux" target="_blank" rel="nofollow noopener">the RedOcteensy git repo README</a>.
+    </p>
+    <p>
+      After playing for a bit, I feel like FSRs are an imminent upgrade. The force required to consistently activate buttons with the current contact sensors is too great to be able to reliably hit faster note sequences, and uses an exhausting amount of energy. The down arrow is particularly bad.
+    </p>
+    <p>
+      So, to be continued?
+    </p>
+  </body>
+</html>

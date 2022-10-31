@@ -1,13 +1,13 @@
 :root {
-  --body-color: #444;
-  --body-background: #fff;
+  --body-background-rgb: 255, 255, 255;
+  --body-color-rgb: 68, 68, 68;
   --link-color: #07C;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --body-color: #fff;
-    --body-background: #222;
+    --body-background-rgb: 34, 34, 34;
+    --body-color-rgb: 255, 255, 255;
     --link-color: #3AF;
   }
 }
@@ -33,33 +33,46 @@
 }
 
 * {
-  padding: 0;
   margin: 0;
+  padding: 0;
 }
 
 body {
+  background: #fff;
+  background: rgb(var(--body-background-rgb));
+  color: #444;
+  color: rgb(var(--body-color-rgb));
   font-family: "Hind Vadodara", sans-serif;
   font-size: 1.5rem;
-  color: #444;
-  color: var(--body-color);
-  background: #fff;
-  background: var(--body-background);
+  padding: 2rem 2rem;
 }
 
 h1 {
   font-size: 6rem;
 }
 
-h2, h3 {
-  margin: 3rem 0 1rem;
-}
-
 h2 {
   font-size: 3.5rem;
 }
 
+h2, h3 {
+  margin: 3rem 0 1rem;
+}
+
+h2 + h3 {
+  margin-top: 0;
+}
+
 h3 {
   font-size: 2rem;
+}
+
+p, ul, ol, table {
+  margin: 1rem 0;
+}
+
+table {
+  border-spacing: 0;
 }
 
 @media (max-width: 60rem) {
@@ -104,6 +117,10 @@ h3 {
   h3 {
     font-size: 1.5rem;
   }
+
+  p, ul, ol, table {
+    margin: .75rem 0;
+  }
 }
 
 @media (max-width: 30rem) {
@@ -126,6 +143,10 @@ h3 {
 
   h3 {
     font-size: 1.25rem;
+  }
+
+  p, ul, ol, table {
+    margin: .5rem 0;
   }
 }
 
