@@ -14,6 +14,12 @@ img {
     height: auto;
 }
 
+iframe {
+    display: block;
+    margin: 1rem auto;
+    max-width: 100%;
+}
+
 .image-link {
     display: block;
     margin: 1rem auto;
@@ -79,6 +85,16 @@ img {
 .wire-layout tr:nth-child(even) {
     background-color: #191919;
     background-color: rgba(var(--body-color-rgb), 0.1);
+}
+
+.youtube-embed {
+    aspect-ratio: 560 / 315;
+    height: auto;
+}
+
+.caption {
+    text-align: center;
+    font-style: italic;
 }
 
 @media (max-width: 60rem) {
