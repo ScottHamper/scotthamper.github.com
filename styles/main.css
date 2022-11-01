@@ -144,10 +144,6 @@ table {
   h3 {
     font-size: 1.25rem;
   }
-
-  p, ul, ol, table {
-    margin: .5rem 0;
-  }
 }
 
 a {
