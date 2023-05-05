@@ -34,7 +34,7 @@
       ... Except the control box costs a whopping $65 dollars, and it's unclear whether or not it would work with my pad. When Googling "RedOctane Afterburner", most results point to a different model (PX<strong>U</strong>MTP) that uses a DE-9 connector. Given the similarity in model names, it's possible that mine was a different revision of the Afterburner, but the store page for the control box doesn't clearly show which DE connector it uses. I did find a single eBay listing for the PXMTP that included a USB control box that looked the same, so 🤷. Regardless, $65 is too steep! <em>Disqualified</em>.
     </p>
 
-    <h3>Xbox to USB adapter cable</h3>
+    <h3>Xbox to USB Adapter Cable</h3>
     <p>
       The original Xbox controller connector is secretly a USB cable in a proprietary housing. As a result, it's possible to purchase an adapter or modify the cable to use a standard USB-A connector. Ready-made adapters seem to be pretty cheap to buy - around $12 <a href="https://www.amazon.com/dp/B000RT2868" rel="nofollow noopener">via Amazon</a> - making them an affordable option. However, the primary concern for this solution is whether or not there will be driver support for a converted controller.
     </p>
@@ -162,7 +162,7 @@
     </p>
 
     <h2 id="software">Software</h2>
-    <a href="https://gitlab.com/ScottHamper/red-octeensy" target="_blank" rel="nofollow noopener" title="Get the code via GitLab" class="image-link image-link--gitlab">
+    <a href="https://gitlab.com/ScottHamper/red-octeensy/-/tree/v1.0.0" target="_blank" rel="nofollow noopener" title="Get the code via GitLab" class="image-link image-link--gitlab">
       <img src="images/gitlab-logo.svg" alt="The GitLab logo" height="48" />
     </a>
     <p>
@@ -182,6 +182,161 @@
     </p>
     <p>
       So, to be continued?
+    </p>
+
+    <h2 id="upgrading-to-fsrs">Upgrading to FSRs</h2>
+    <p>Christmas came, and with it, so did parts and tools. Time to upgrade! (He says, in May)</p>
+
+    <h3>Goals</h3>
+    <h4>Increase Button Sensitivity</h4>
+    <p>
+      The original contact sensors require pushing an acrylic top plate down until it touches a metal mesh below it, completing the circuit. Due to the stiffness of the acrylic and the distance to the metal mesh, a relatively considerable amount of force is required to trigger a button press.
+    </p>
+
+    <h4>Prevent Accidental Double Triggerings</h4>
+    <p>
+      Again, due to the stiffness of the acrylic top plates, it's all too easy for a button to double trigger from the pressure on the acrylic fluctuating during a step. I mitigated this by debouncing button inputs in software, but the technique wasn't perfect and double triggering still occasionally occured.
+    </p>
+
+    <h4>Increase Usable Area of Each Button</h4>
+    <p>
+      The original sensors work best when the very center of a button is pressed. The center is where the metal mesh is positioned, and is also the easiest part of the acrylic to deform/push downward (the sides are propped up slightly by some foam padding underneath). Hitting the edge of a button results in a much less consistent trigger.
+    </p>
+
+    <h4>Avoid XInput</h4>
+    <p>
+      I've been experiencing an intermittent issue with the xboxdrv driver in Linux where the computer will sometimes disconnect the Teensy in the middle of a song (the Teensy's LED turns off, indicating that power has been cut off). When this happens, I have to unplug the pad, restart the xboxdrv daemon via <code>systemctl</code>, and then plug the pad back in. It's super frustrating! So, although it's unrelated to FSRs, while I'm re-programming the Teensy, I'm going to switch to using the built-in joystick API. In hindsight, using the XInput library seems like unnecessary complexity, as StepMania will work with any gamepad (though just think about how cool it would be <a href="https://www.youtube.com/watch?v=kjdK44BXHD4" target="_blank" rel="nofollow noopener">to play Elden Ring with a DDR pad!</a>).
+    </p>
+
+    <h3>Parts</h3>
+    <p>
+      Compared to the initial conversion, which had the microcontroller simply plug into the pad's existing circuits, upgrading to FSRs requires modifying the pad and creating more complex circuits. A number of basic electrical components and tools are required to build everything:
+    </p>
+    <ul>
+      <li><a href="https://buyinterlinkelectronics.com/collections/new-standard-force-sensors/products/fsr-model-408-200mm-length" target="_blank" rel="nofollow noopener">200mm force-sensing resistors</a> (x6; at the time of writing, Interlink has a $25 minimum order amount, which requires purchasing seven FSRs - we get a spare!)</li>
+      <li>Metal film resistors (I landed on using 330 Ohm resistors but also experimented with 510 and 1K)</li>
+      <li>24 AWG wire (I used silicone-insulated flexible tinned copper wire and it was dreamy to work with)</li>
+      <li>Heat shrink tubing (I used 1.5mm - 3.5mm diameter tubing)</li>
+      <li>Dupont-style 2.54mm connector pins (female &amp; male)</li>
+      <li>Dupont-style 2.54mm connector 1-pin &amp 2-pin housings (I de-pinned the jumper cables bought for the initial conversion to get 1-pin housings)</li>
+      <li>Crimping tool for Dupont-style 2.54mm connectors</li>
+      <li><s>Velcro</s>"Hook and loop" tape</li>
+      <li>Double-sided tape</li>
+      <li>Soldering iron &amp; solder (while I soldered header pins onto the Teensy in the initial conversion, it could have been avoided by purchasing a Teensy with the pins pre-soldered. This time, there's no avoiding soldering!)</li>
+      <li>Solderless breadboard (optional; helpful for prototyping)</li>
+    </ul>
+    <p>
+      Using Dupont-style connectors throughout the build provides a couple of benefits. First, placing a connector onto the end of each FSR allows for easily replacing a sensor if/when one breaks (or more realistically, when my sketchy solder connection fails). Second, the connectors plug directly onto the Teensy's header pins and into a solderless breadboard, making it easy to prototype circuits before final assembly. One downside to using these connectors is that they do not clip into one another and are only held together by friction. However, that friction seems more than adequate.
+    </p>
+
+    <h3>The FSR Circuit</h3>
+    <picture>
+      <source srcset="images/fsr-circuit-light.png" media="(prefers-color-scheme: dark)" />
+      <img src="images/fsr-circuit.png" alt="A circuit diagram for using an FSR as a button" width="520" height="211" />
+    </picture>
+
+    The FSR circuit is fairly simple, requiring only the addition of an FSR and a static resistor for each button. The 3V, GND, and analog input pins are all available on the Teensy. Before modifying the pad and control box, I prototyped the circuit on a breadboard and used <a href="https://www.pjrc.com/teensy/tutorial4.html" target="_blank" rel="nofollow noopener">the example analog input code from PJRC</a> to make sure I understood everything correctly:
+
+    <a href="images/fsr-circuit-prototype.jpg" target="_blank" class="image-link">
+      <img src="images/fsr-circuit-prototype-preview.jpg" alt="An FSR circuit prototyped on a solderless breadboard" width="800" height="460" />
+    </a>
+
+    <h3>Pad Modifications</h3>
+    <img src="images/pad-modification-process.gif" alt="The process of modifying a pad button cavity, animated" width="490" height="490" />
+    <div class="caption">This sensor placement did not work well.</div>
+    <p>
+      The "only" modification necessary on the pad itself is to swap out each button's contact sensor for an FSR. However, the devil is in the details! There were a number of concerns I wanted to address while making the swap.
+    </p>
+
+    <h4>Removable Sensors</h4>
+    <p>
+      As mentioned earlier, I wanted the ability to easily replace sensors if/when necessary. I used hook and loop tape to secure FSRs to the pad, and Dupont-style connectors to plug the FSR into the pad's existing wiring. This makes it easy to remove a sensor, though will require some time to prep a new sensor for installation.
+    </p>
+
+    <h4>Flat Button Surface</h4>
+    <p>
+      Due to the hook and loop tape elevating the FSRs, there needs to be enough raised support elsewhere along the button cavity in order to maintain a relatively level surface. Not only does an uneven surface feel weird under foot, but it also risks damaging the acrylic top plates.
+    </p>
+    <p>
+      In my first iteration (shown above in the animated GIF), I placed FSRs along the inside edge of each button cavity, about two inches away from the center panel. I then re-used as much of the existing foam insert as possible to keep the rest of the button elevated. By keeping the contact sensor, which is in the center of the button and elevated by both a piece of foam and a thin piece of wood, I was hoping there would be enough support. However, I still managed to crack my down arrow's acrylic because the far edge of the button could be pressed too much relative to where the FSR was, 😥.
+    </p>
+    
+    <h4>Protected Components</h4>
+    <p>
+      The pad is going to be stomped on, so we want to do whatever we can to protect the components in each button cavity. I was most worried about the solder connections on the FSRs and the Dupont-style connectors.
+    </p>
+    <p>
+      In my first iteration, I laid the Dupont-style connectors next to the original contact sensor. The contact sensor is thick enough that it would be hit before any pressure would be applied to the wire connector. In my second iteration (shown further below), I used double-sided tape to secure scrap pieces of the button insert's black foam around the connectors. The combined thickness of the tape and the foam is similar to the thickness of the contact sensor.
+    <p>
+      To mitigate damage to solder connections on the FSRs, I cut away a small amount of the denser black foam that was laying on top of the connections, while leaving the fluffier white foam above. My hope is that the remaining black foam to the sides of the connection will absorb some of the shock of a button press. I also oriented the FSR so that the soldered bits are up against the edge of the button where it's less likely to see heavy/focused weight.
+    </p>
+    
+    <h4>Sensor Position</h4>
+    <p>
+      Here's where I goofed in my first iteration. I chose to place sensors close to the center panel for a couple of different reasons. First, if I ever become amazing at minimizing the amount of distance my feet travel, then having sensors close to the center will allow for the greatest amount of sensitivity tuning and for the most reliable button presses. Second, it allowed me to keep the original contact sensors in the center of the button cavity to provide support, as previously mentioned.
+    </p>
+    <p>
+      Ultimately, this positioning didn't allow for reliable button presses across the entire button surface. The acrylic is too flexible - once I went past half-way on a button, I could stand on it with all of my weight and the FSR would not be impacted. I even took a cut-out of the black foam, positioned it directly on top of the FSR, and used double-sided tape to secure it to the acrylic plate. This helped, but still wasn't good enough:
+    </p>
+
+    <a href="images/acrylic-plate-underside.jpg" target="_blank" class="image-link">
+      <img src="images/acrylic-plate-underside-preview.jpg" alt="The underside of a modified acrylic top plate" width="800" height="360" />
+    </a>
+
+    <p>
+      I ended up re-arranging the FSRs to run through the middle of each button cavity, spanning from the center towards the outside edge. This required cutting out the original contact sensor, so I filled the now-empty areas of the cavity with scrap cuts of the black foam and used double-sided tape to secure them in place/add support:
+    </p>
+
+    <a href="images/button-cavity.jpg" target="_blank" class="image-link">
+      <img src="images/button-cavity-preview.jpg" alt="The second iteration of a modified button cavity" width="800" height="796" />
+    </a>
+    
+    <p>
+      While this iteration hasn't really added any more raised supports than my first attempt, it seems to be working well. It feels flat enough under foot, and I haven't had any additional acrylic cracking. I did need to keep and reposition the extra piece of black foam taped to the bottom of the arcylic, directly above the FSR, but I can now press anywhere on the button and get a reliable, sensitive trigger.
+    </p>
+
+    <h3>Control Box Modifications</h3>
+    <a href="images/fsr-control-box.jpg" target="_blank" class="image-link">
+      <img src="images/fsr-control-box-preview.png" alt="The modified control box interior" width="800" height="367" />
+    </a>
+
+    <p>
+      All of the wiring inside of the control box needs to be re-done. Originally, each input pin on the Teensy only needed to have a single wire going to it, but now each pin needs two - one bringing voltage into the pin, and the other dumping voltage to ground through a resistor. So I soldered and crimped up a bunch of pigtail cables, after I had experimented with different resistor values and settled on 330 Ohms:
+    </p>
+
+    <a href="images/pin-pigtail-cable.jpg" target="_blank" class="image-link">
+      <img src="images/pin-pigtail-cable-preview.jpg" alt="A pigtail cable for connecting a button to a Teensy pin" width="800" height="545" />
+    </a>
+
+    <p>
+      One other major difference compared to the initial conversion is that the DE-15 pins that used to be shared button ground connections (pins 3, 5, and 15) are now shared +3V lines. Previously, I daisy-chained pins 3, 5, 15, and GND together and then had one wire running to the Teensy's GND pin. However, the pigtails above are now carrying the ground for each button (and there are six of them), plus there's still the GND pin on the DE-15 connector. In order to get everything grounded, I soldered together a wire harness. BEHOLD! My magnum opus:
+    </p>
+
+    <a href="images/ground-wire-harness.jpg" target="_blank" class="image-link">
+      <img src="images/ground-wire-harness-preview.jpg" alt="The wiring harness for connecting all of the ground wires to a Teensy pin" width="800" height="268" />
+    </a>
+
+    <h3>Software</h3>
+    <a href="https://gitlab.com/ScottHamper/red-octeensy" target="_blank" rel="nofollow noopener" title="Get the code via GitLab" class="image-link image-link--gitlab">
+      <img src="images/gitlab-logo.svg" alt="The GitLab logo" height="48" />
+    </a>
+    <p>
+      By switching to the built-in joystick API and due to no longer needing to debounce inputs, the code ended up way simpler than before! I've traded increased electrical complexity for reduced software complexity. While prototyping, I also found that a single sensitivity threshold worked comfortably for every button, which helped keep the code concise.
+    </p>
+    <p>
+      To find a suitable sensitivity threshold for buttons, I started by using <a href="https://www.pjrc.com/teensy/tutorial4.html" target="_blank" rel="nofollow noopener">the example analog input code from PJRC</a> and getting a sense of what values the Teensy would read. Eventually, once I had the Joystick code and an initial threshold in place, I simply opened up the OS's gamepad settings (e.g., <code>joy.cpl</code> in Windows) and watched buttons light up in the UI as I pressed them, then tweaked accordingly.
+    </p>
+    <p>
+      It's worth noting that there are already other code projects out there for FSR pads that could be adapted to the PXMTP, such as the incredible looking <a href="https://github.com/teejusb/fsr" target="_blank" rel="nofollow noopener">Teejusb FSR project</a>. I didn't go that route because I didn't want to take the time to install Python, Node, Yarn, and do the config/build steps necessary to get the web interface running (and the web interface is def the coolest/most useful part in terms of fine-tuning button sensitivities). It took very little time to find a sensitivity I was happy with via trial-and-error instead, but if you already have Python/Node/Yarn installed and/or want the additional features (e.g., profiles), then Teejusb's project looks like a fantastic option.
+    </p>
+
+    <h3>Results</h3>
+    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/YawNczc5WCs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="youtube-embed"></iframe>
+    <div class="caption">
+      It works! Now I just need to git gud-er.
+    </div>
+    <p>
+      Holy smokes, is it great. Navigating menus is so much better now that double triggering never happens, and the button sensitivity is perfect. It's a massive improvement! We'll have to wait and see how well the pad components hold up to abuse over time, but so far so good.
     </p>
   </body>
 </html>
